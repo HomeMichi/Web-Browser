@@ -1,1 +1,93 @@
-.vscode
+.vscode/
+__pycache__/
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+pip-wheel-metadata/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+*.pot
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# mypy / type checkers
+.mypy_cache/
+.dmypy.json
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer artifacts
+*.egg
+*.egg-info/
+.installed.cfg
+*.whl
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local config
+local_settings.py
+instance/
+.webassets-cache
+
+# Optional: keep sensitive files out
+.env
+.env.*
+secrets.json
