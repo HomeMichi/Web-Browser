@@ -1,8 +1,7 @@
 import tkinter
 from constants import HEIGHT, WIDTH, SCROLL_STEP, VSTEP, HSTEP
 from layout import Layout
-from text import Text
-from tag import Tag
+from htmlParser import HTMLParser
 
 class Browser:
 
@@ -19,8 +18,8 @@ class Browser:
         
     def load(self, url):
         body = url.request()
-        tokens = lex(body)
-        self.display_list = Layout(tokens).display_list
+        self.nodes = HTMLParser(body).parse()
+        self.display_list = Layout(self.nodes).display_list
         self.draw()
     
     def draw(self):
@@ -35,23 +34,3 @@ class Browser:
     def scrolldown(self, e):
         self.scroll += SCROLL_STEP
         self.draw()
-
-def lex(body):
-    out = []
-    buffer = ""
-    in_tag = False
-    for c in body:
-        if c == "<":
-            in_tag = True
-            if buffer:
-                out.append(Text(buffer))
-            buffer = ""
-        elif c == ">":
-            in_tag = False
-            out.append(Tag(buffer))
-            buffer = ""
-        else:
-            buffer += c
-    if not in_tag and buffer:
-        out.append(Text(buffer))
-    return out

@@ -1,10 +1,10 @@
 from constants import HEIGHT, WIDTH, SCROLL_STEP, VSTEP, HSTEP
 from text import Text
-from tag import Tag
+from element import Element
 from font_cache import get_font
 
 class Layout:
-    def __init__(self, tokens):
+    def __init__(self, node):
         self.display_list = []
         self.cursor_x = HSTEP
         self.cursor_y = VSTEP
@@ -12,38 +12,9 @@ class Layout:
         self.style = "roman"
         self.size = 12
         self.line = []
+        self.recurse(node)
         self.flush()
 
-        for tok in tokens:
-            self.token(tok)
-        
-        self.flush()
-
-    def token(self, tok):
-        if isinstance(tok, Text):
-            for word in tok.text.split():
-                self.word(word)
-        elif tok.tag == "i":
-            self.style = "italic"
-        elif tok.tag == "/i":
-            self.style = "roman"
-        elif tok.tag == "b":
-            self.weight = "bold"
-        elif tok.tag == "/b":
-            self.weight = "normal"
-        elif tok.tag == "small":
-            self.size -= 2
-        elif tok.tag == "/small":
-            self.size += 2
-        elif tok.tag == "big":
-            self.size += 4
-        elif tok.tag == "/big":
-            self.size -= 4
-        elif tok.tag == "br":
-            self.flush()
-        elif tok.tag == "/p":
-            self.flush()
-            self.cursor_y += VSTEP
 
     def word(self, word):
         font = get_font(self.size, self.weight, self.style)
@@ -68,3 +39,38 @@ class Layout:
 
         self.cursor_x = HSTEP
         self.line = []
+
+    def open_tag(self, tag):
+        if tag == "i":
+            self.style = "italic"
+        elif tag == "b":
+            self.weight == "bold"
+        elif tag == "small":
+            self.size -= 2
+        elif tag == "big":
+            self.size += 4
+        elif tag == "br":
+            self.flush()
+
+    def close_tag(self, tag):
+        if tag == "i":
+            self.style = "roman"
+        elif tag == "b":
+            self.weight == "normal"
+        elif tag == "small":
+            self.size += 2
+        elif tag == "big":
+            self.size -= 4
+        elif tag == "p":
+            self.flush()
+            self.cursor_y += VSTEP
+
+    def recurse(self, tree):
+        if isinstance(tree, Text):
+            for word in tree.text.split():
+                self.word(word)
+        else:
+            self.open_tag(tree.tag)
+            for child in tree.children:
+                self.recurse(child)
+            self.close_tag(tree.tag)
