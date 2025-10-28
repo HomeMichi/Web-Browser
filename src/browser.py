@@ -1,7 +1,7 @@
 import tkinter
-from constants import HEIGHT, WIDTH, SCROLL_STEP, VSTEP, HSTEP
-from layout import Layout
-from htmlParser import HTMLParser
+from constants import HEIGHT, WIDTH, SCROLL_STEP, VSTEP
+from layout import DocumentLayout, paint_tree
+from htmlParser import HTMLParser#, print_tree
 
 class Browser:
 
@@ -19,18 +19,24 @@ class Browser:
     def load(self, url):
         body = url.request()
         self.nodes = HTMLParser(body).parse()
-        self.display_list = Layout(self.nodes).display_list
+        self.document = DocumentLayout(self.nodes)
+        self.document.layout()
+        #print_tree(self.nodes)
+
+        self.display_list = []
+        paint_tree(self.document, self.display_list)
         self.draw()
     
     def draw(self):
         self.canvas.delete("all")
-        for x, y, c, f in self.display_list:
-            if y > self.scroll + HEIGHT:
+        for cmd in self.display_list:
+            if cmd.top > self.scroll + HEIGHT:
                 continue
-            if y + VSTEP < self.scroll:
+            if cmd.bottom < self.scroll:
                 continue
-            self.canvas.create_text(x, y - self.scroll, text=c, anchor="nw", font=f)
+            cmd.execute(self.scroll, self.canvas)
 
     def scrolldown(self, e):
-        self.scroll += SCROLL_STEP
+        max_y = max(self.document.height + 2*VSTEP - HEIGHT, 0)
+        self.scroll = min(self.scroll + SCROLL_STEP, max_y)
         self.draw()
