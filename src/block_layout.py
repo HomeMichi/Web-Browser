@@ -1,4 +1,4 @@
-from constants import WIDTH, VSTEP, HSTEP
+from constants import VSTEP
 from text import Text
 from element import Element
 from font_cache import get_font
@@ -154,26 +154,6 @@ class BlockLayout:
                 cmds.append(cmd)
         return cmds
 
-
-class DocumentLayout:
-    def __init__(self, node):
-        self.node = node
-        self.parent = None
-        self.children = []
-
-        self.x = HSTEP
-        self.y = VSTEP
-        self.width = WIDTH - 2*HSTEP
-        self.height = 0
-
-    def layout(self):
-        child = BlockLayout(self.node, self, None)
-        self.children.append(child)
-        child.layout()
-        self.height = child.height
-
-    def paint(self):
-        return []
 
 def paint_tree(layout_objects, display_list):
     display_list.extend(layout_objects.paint())

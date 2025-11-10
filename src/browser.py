@@ -1,7 +1,8 @@
 import tkinter
 from constants import HEIGHT, WIDTH, SCROLL_STEP, VSTEP
-from layout import DocumentLayout, paint_tree
-from htmlParser import HTMLParser#, print_tree
+from block_layout import paint_tree
+from document_layout import DocumentLayout 
+from html_parser import HTMLParser#, print_tree
 
 class Browser:
 
